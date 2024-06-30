@@ -10,11 +10,11 @@ import (
 )
 
 type Subscriber interface {
-	Endpoint(ctx context.Context, request any) (response any, err error)
-	DecodeRequest(context.Context, *Message) (request any, err error)
+	Endpoint(context.Context, any) (any, error)
+	DecodeRequest(context.Context, Message) (any, error)
 	Subject() string
 
-	Decode(context.Context, []byte) (context.Context, *Message, error)
+	Decode(context.Context, []byte) (context.Context, Message, error)
 }
 
 func Subscribe(ctx context.Context, conn Conn, ss ...Subscriber) error {
