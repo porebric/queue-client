@@ -11,10 +11,9 @@ import (
 
 type Subscriber interface {
 	Endpoint(context.Context, any) (any, error)
-	DecodeRequest(context.Context, Message) (any, error)
 	Subject() string
 
-	Decode(context.Context, []byte) (context.Context, Message, error)
+	Decode(context.Context, []byte) (Message, error)
 }
 
 func Subscribe(ctx context.Context, conn Conn, ss ...Subscriber) error {
@@ -42,11 +41,11 @@ func makeSurveyHandler(conn *nats.Conn, s Subscriber) nats.MsgHandler {
 	return kitnats.NewSubscriber(
 		s.Endpoint,
 		func(ctx context.Context, msg *nats.Msg) (request any, err error) {
-			ctx, req, err := s.Decode(ctx, msg.Data)
+			req, err := s.Decode(ctx, msg.Data)
 			if err != nil {
 				return nil, fmt.Errorf("decode nats msg: %w", err)
 			}
-			return s.DecodeRequest(ctx, req)
+			return req, nil
 		},
 		encodeResponse,
 		opts...,
