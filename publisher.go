@@ -1,4 +1,4 @@
-package nats
+package queue_client
 
 import (
 	"context"

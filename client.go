@@ -1,4 +1,4 @@
-package nats
+package queue_client
 
 import (
 	"context"
@@ -12,7 +12,7 @@ type client struct {
 	conn Conn
 }
 
-func NewClient(ctx context.Context, host string, port int) (Client, error) {
+func NewNatsClient(ctx context.Context, host string, port int) (Client, error) {
 	conn, err := nats.Connect(fmt.Sprintf("nats://%s:%d", host, port),
 		nats.ReconnectHandler(func(nc *nats.Conn) {
 			logger.Info(ctx, "reconnected to NATS server", "url", nc.ConnectedUrl())
